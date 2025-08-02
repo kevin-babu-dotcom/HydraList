@@ -1,3 +1,15 @@
-:root{
+@import "tailwindcss";
+:root {
+  font-family: gilroy;
+  line-height: 1;
+  font-weight: 400;
 
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
 }
+
+
+
