@@ -1,10 +1,8 @@
 // src/pages/TaskListPage.jsx
-import { useState, useEffect } from 'react'; // Add useEffect
+import { useState, useEffect } from 'react';
 import TaskBlock from '../components/TaskBlock';
 import Button from '../components/Button';
 
-// The API key is now read directly on the frontend.
-// IMPORTANT: The variable in your .env file MUST start with VITE_
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 function TaskListPage() {
@@ -13,27 +11,18 @@ function TaskListPage() {
         try {
             const storedTasks = localStorage.getItem('hydraListTasks');
             if (storedTasks) {
-                return JSON.parse(storedTasks);
+                const parsed = JSON.parse(storedTasks);
+                // Only return if it's a valid array with actual tasks
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    return parsed;
+                }
             }
         } catch (error) {
             console.error('Error loading tasks from localStorage:', error);
         }
         
-        // Return default tasks if nothing in storage or error
-        return [
-            { 
-                id: 1, 
-                text: 'Start my useless project', 
-                description: 'Begin the endless cycle of productivity theater by creating something that solves no real problems',
-                status: 'todo' 
-            },
-            { 
-                id: 2, 
-                text: 'Question my life choices', 
-                description: 'Spend at least 30 minutes contemplating whether this project reflects deeper existential issues',
-                status: 'todo' 
-            },
-        ];
+        // Return empty array instead of default tasks
+        return [];
     };
 
     const [tasks, setTasks] = useState(getStoredTasks());
@@ -46,7 +35,7 @@ function TaskListPage() {
         } catch (error) {
             console.error('Error saving tasks to localStorage:', error);
         }
-    }, [tasks]); // Runs every time tasks array changes
+    }, [tasks]);
 
     const handleCompleteTask = async (taskId, taskText, taskDescription) => {
         // Mark the task as completed immediately for a responsive UI
@@ -172,11 +161,10 @@ function TaskListPage() {
     // Optional: Add a function to clear all tasks (for debugging/testing)
     const clearAllTasks = () => {
         localStorage.removeItem('hydraListTasks');
-        setTasks(getStoredTasks()); // Reset to defaults
+        setTasks([]); // Set to empty array
         console.log('All tasks cleared from localStorage');
     };
 
-    // The rendering part now includes Tailwind classes directly
     return (
         <main 
             className="min-h-screen p-8 bg-cover bg-center bg-no-repeat bg-fixed"
@@ -196,7 +184,7 @@ function TaskListPage() {
             ></div>
             
             <div className="relative z-10">
-                {/* Optional: Add a debug button to clear localStorage (remove in production) */}
+                {/* Optional: Add a debug button to clear localStorage */}
                 <div className="fixed top-4 right-4 z-20">
                     <button
                         onClick={clearAllTasks}
@@ -211,19 +199,31 @@ function TaskListPage() {
                     className="flex flex-wrap gap-4 items-start"
                     style={{ minHeight: '80vh' }}
                 >
-                    {/* Render TaskBlocks */}
-                    {tasks.map((task) => (
-                        <div
-                            key={task.id}
-                            className="rounded-2xl flex"
-                            style={{ minHeight: 100 }}
-                        >
-                            <TaskBlock
-                                task={task}
-                                onComplete={handleCompleteTask}
-                            />
+                    {/* Only render TaskBlocks if there are tasks */}
+                    {tasks.length > 0 ? (
+                        tasks.map((task) => (
+                            <div
+                                key={task.id}
+                                className="rounded-2xl flex"
+                                style={{ minHeight: 100 }}
+                            >
+                                <TaskBlock
+                                    task={task}
+                                    onComplete={handleCompleteTask}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        // Optional: Show a message when no tasks exist
+                        <div className="w-full flex items-center justify-center">
+                            <p 
+                                className="text-white/70 text-lg"
+                                style={{ fontFamily: 'Gilroy, sans-serif' }}
+                            >
+                                No tasks yet. Click the + button to add your first task!
+                            </p>
                         </div>
-                    ))}
+                    )}
                 </div>
             </div>
             
