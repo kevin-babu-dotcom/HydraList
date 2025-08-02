@@ -49,18 +49,18 @@ For Software:
 
 
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
+
+<img width="1918" height="883" alt="Screenshot 2025-08-02 074719" src="https://github.com/user-attachments/assets/6d61c30c-b274-4dbc-9e84-0df4459d5fa0" />
+Main HydraList Interface:
+This screenshot displays the main HydraList interface. Two sample tasks are shown as pastel yellow cards at the top left, each with a checkbox and bold task title. The background is a warm orange, and utility buttons are visible: a "Clear All Tasks" button at the top right and a floating "+" button at the bottom right for adding new tasks. The layout is clean, colorful, and user-friendly, emphasizing easy task management.
 
 
 <img width="396" height="356" alt="Screenshot 2025-08-02 073052" src="https://github.com/user-attachments/assets/f081f576-b47a-47db-91f7-9b18c653e0cf" />
-
+Add New Task:
+This screenshot shows the "Add New Task" modal in HydraList. The modal features input fields for the task title and task details, with a validation message prompting the user to fill out the required "Task Details" field. The interface includes clear "Cancel" and "Add Task" buttons, and a close icon in the top-right corner, all set against a soft yellow background for a friendly user experience.
 
 
 ### Project Demo
-# Video
-[Add your demo video link here]
-*Explain what the video demonstrates*
 
 # Additional Demos
 [Add any extra demo materials/links]
