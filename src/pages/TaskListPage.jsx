@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react'; // Add useEffect
 import TaskBlock from '../components/TaskBlock';
 import Button from '../components/Button';
 
-const HF_TOKEN = import.meta.env.VITE_HF_TOKEN;
+// The API key is now read directly on the frontend.
+// IMPORTANT: The variable in your .env file MUST start with VITE_
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 function TaskListPage() {
     // Helper function to get tasks from localStorage
@@ -54,35 +56,61 @@ function TaskListPage() {
             )
         );
 
+        // --- Start of New Simplified Gemini API Call ---
         const fullTaskContext = taskDescription ? `${taskText}: ${taskDescription}` : taskText;
 
+        // 1. Check if the API key exists
+        if (!GEMINI_API_KEY) {
+            console.error("VITE_GEMINI_API_KEY is not set in your .env file.");
+            // Add fallback tasks so the app doesn't break
+            const fallbackTasks = [
+                { text: `(No API Key) Overthink "${taskText}"`, description: 'The VITE_GEMINI_API_KEY is missing from the .env file.' },
+                { text: `(No API Key) Plan to fix env file`, description: 'Restart the dev server after fixing it.' }
+            ];
+            const newTasks = fallbackTasks.map((taskData, index) => ({ id: Date.now() + index, ...taskData, status: 'todo' }));
+            setTasks(prevTasks => [...prevTasks, ...newTasks]);
+            return;
+        }
+
+        // 2. Construct the prompt for Gemini
+        const prompt = `You just completed this task: "${fullTaskContext}"
+        Now generate exactly 2 new follow-up tasks that would naturally result from completing this task.
+        Return the tasks in this exact format, and nothing else:
+        TASK 1:
+        TITLE: [brief task title]
+        DESCRIPTION: [detailed description of what needs to be done]
+
+        TASK 2:
+        TITLE: [brief task title]
+        DESCRIPTION: [detailed description of what needs to be done]`;
+
         try {
-            // NEW: Call our own backend API endpoint
-            const response = await fetch('/api/generateTasks', {
+            // 3. Call the Gemini API directly from the browser
+            const response = await fetch(
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+              {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ fullTaskContext }), // Send the context to our function
-            });
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+              }
+            );
 
             if (!response.ok) {
-                // The error from our function will be in the response body
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'API request failed');
+                console.error("Gemini API Error:", errorData);
+                throw new Error("Gemini API request failed.");
             }
 
-            const result = await response.json();
-            const generatedText = result.generated_text || '';
-            console.log('AI Response:', generatedText);
+            const aiResult = await response.json();
+            const generatedText = aiResult.candidates[0].content.parts[0].text;
 
-            // Your brilliant parsing logic remains unchanged!
+            // 4. Parse the response (same logic as before)
             const parseAITasks = (text) => {
                 const tasks = [];
-                const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+                const lines = text.split('\n').filter(line => line.trim());
                 let currentTask = {};
                 for (const line of lines) {
-                    if (line.match(/^TASK \d+:$/)) {
+                    if (line.match(/^TASK \d+:/)) {
                         if (currentTask.text && currentTask.description) tasks.push(currentTask);
                         currentTask = {};
                     } else if (line.startsWith('TITLE:')) {
@@ -96,40 +124,23 @@ function TaskListPage() {
             };
 
             const aiGeneratedTasks = parseAITasks(generatedText);
-            console.log('Parsed AI Tasks:', aiGeneratedTasks);
+            if (aiGeneratedTasks.length < 2) throw new Error("AI did not return two parsable tasks.");
 
-            let tasksToAdd;
-            if (aiGeneratedTasks.length >= 2) {
-                tasksToAdd = aiGeneratedTasks;
-            } else {
-                // Fallback if parsing fails
-                throw new Error("AI did not return two parsable tasks.");
-            }
-
-            const newTasks = tasksToAdd.map((taskData, index) => ({
+            const newTasks = aiGeneratedTasks.map((taskData, index) => ({
                 id: Date.now() + index,
                 ...taskData,
                 status: 'todo'
             }));
-
             setTasks(prevTasks => [...prevTasks, ...newTasks]);
 
         } catch (error) {
-            // This single catch block now handles all errors gracefully!
-            console.error('Error generating new tasks:', error);
-
-            // Your excellent fallback task logic
+            console.error('Error during AI task generation:', error);
+            // Fallback if API fails for any reason
             const fallbackTasks = [
-                { text: `Regret completing "${taskText}"`, description: 'Wonder if you could have done it better.' },
-                { text: `Wonder why finishing "${taskText}" was a good idea`, description: 'Question everything.' }
+                { text: `(API Failed) Overthink "${taskText}"`, description: 'The AI is taking a break. Or it broke. Check the console.' },
+                { text: `(API Failed) Debug the AI`, description: 'Look at the browser console (F12) to see the error from the Gemini API.' }
             ];
-
-            const newTasks = fallbackTasks.map((taskData, index) => ({
-                id: Date.now() + index,
-                ...taskData,
-                status: 'todo'
-            }));
-
+            const newTasks = fallbackTasks.map((taskData, index) => ({ id: Date.now() + index, ...taskData, status: 'todo' }));
             setTasks(prevTasks => [...prevTasks, ...newTasks]);
         }
     };

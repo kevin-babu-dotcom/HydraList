@@ -20,6 +20,11 @@ export default async function handler(req, res) {
     // Access the Gemini API key from server-side environment variables.
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
+    // --- DEBUGGING STEP ---
+    // This will print the key to your terminal where `vercel dev` is running.
+    console.log('Server is attempting to use this GEMINI_API_KEY:', GEMINI_API_KEY);
+    // --- END DEBUGGING ---
+
     if (!GEMINI_API_KEY) {
         return res.status(500).json({ error: 'GEMINI_API_KEY is not configured on the server.' });
     }
