@@ -1,4 +1,4 @@
-    // src/pages/TaskListPage.jsx
+// src/pages/TaskListPage.jsx
     import { useState } from 'react';
     import TaskBlock from '../components/TaskBlock';
     import Button from '../components/Button';
@@ -137,22 +137,25 @@
     // The rendering part now includes Tailwind classes directly
     return (
         // Use Tailwind classes for the main page container
-        <main className="bg-slate-900 text-slate-100 min-h-screen font-sans p-4 sm:p-8">
+        <main className="bg-white min-h-screen font-sans p-8">
         
-        {/* Centered content container */}
-        <div className="max-w-2xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500 mb-8">
-            The Sisyphus Task-List
-            </h1>
-            
-            {/* Container for the tasks with flexbox layout for inline blocks */}
-            <div className="flex flex-wrap gap-4 justify-start">
+        <div className=" ">
+            <div
+            className="flex flex-wrap gap-4 items-start"
+            style={{ minHeight: '80vh' }}
+            >
+            {/* Render TaskBlocks in all grid cells */}
             {tasks.map((task) => (
-                <TaskBlock
+                <div
                 key={task.id}
-                task={task}
-                onComplete={handleCompleteTask}
+                className="rounded-2xl  flex "
+                style={{ minHeight: 100 }}
+                >
+                <TaskBlock
+                    task={task}
+                    onComplete={handleCompleteTask}
                 />
+                </div>
             ))}
             </div>
         </div>

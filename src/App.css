@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 
-#root {
-  
-}
 
+body, #root {
+  background: #fff;
+}

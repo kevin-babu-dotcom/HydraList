@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 const pastelColors = {
-  todo: 'bg-pink-100',
-  completed: 'bg-gray-300',
+  todo: 'bg-yellow-200',
+  completed: 'bg-yellow-100',
 };
 
 const checkboxColors = {
@@ -22,7 +22,7 @@ const TaskBlock = ({ task, onComplete }) => {
   return (
     <div
       className={`
-        inline-block align-top
+        inline-block align-top border
         rounded-xl shadow-md transition-all duration-200 cursor-pointer
         ${pastelColors[task.status]}
         ${expanded ? 'scale-105 z-10' : 'hover:scale-105'}
