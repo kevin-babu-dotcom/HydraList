@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const pastelColors = {
-  todo: 'bg-yellow-200 border-yellow-300', // Changed to yellow
+  todo: 'bg-white border-red-900', // Changed to yellow
   completed: 'bg-gray-100 border-gray-400',
 };
 
@@ -34,7 +34,7 @@ const TaskBlock = ({ task, onComplete }) => {
         fontFamily: 'Gilroy, sans-serif',
         background: task.status === 'completed' 
           ? '#000000'  // Keep gray for completed
-          : '#fef3c7'  // Light yellow for todo tasks
+          : '#ffffff'  // Light yellow for todo tasks
       }}
       onClick={() => setExpanded(!expanded)}
     >

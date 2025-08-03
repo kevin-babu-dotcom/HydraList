@@ -78,7 +78,7 @@ const Button = ({ onAddTask }) => {
       >
         <div 
           ref={formRef}
-          className="backdrop-blur-lg bg-yellow-100 text-black rounded-2xl shadow-2xl p-6 w-80 border-2 border-gray-300"
+          className="backdrop-blur-lg bg-black text-white rounded-2xl shadow-2xl p-6 w-80 border-2 border-gray-300"
         >
           {/* Header with close button */}
           <div className="flex justify-between items-center mb-4">
@@ -98,7 +98,7 @@ const Button = ({ onAddTask }) => {
               placeholder="Task Title"
               value={title}
               onChange={e => setTitle(e.target.value)}
-              className="w-full mb-4 px-4 py-2 rounded-lg border-2 border-gray-300 text-black text-base bg-white/90 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full mb-4 px-4 py-2 rounded-lg border-2 border-gray-300 text-black text-base bg-white/90 shadow-inner focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
               required
               autoFocus
             />
@@ -106,20 +106,20 @@ const Button = ({ onAddTask }) => {
               placeholder="Task Details"
               value={details}
               onChange={e => setDetails(e.target.value)}
-              className="w-full mb-4 px-4 py-2 rounded-lg border-2 border-gray-300 text-sm bg-white/90 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"
+              className="w-full mb-4 px-4 py-2 rounded-lg border-2 text-black border-gray-300 text-sm bg-white/90 shadow-inner focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-vertical"
               rows={3}
             />
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setShowWindow(false)}
-                className="flex-1 py-2 rounded-lg bg-gray-200 border-2 border-gray-300 text-gray-700 text-sm transition hover:bg-gray-300"
+                className="flex-1 py-2 rounded-lg bg-gray-900 border-2 border-gray-900 text-gray-700 text-sm transition hover:bg-gray-300"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 py-2 rounded-lg bg-blue-500 border-2 border-blue-600 text-white text-sm transition hover:bg-blue-600"
+                className="flex-1 py-2 rounded-lg bg-red-500 border-2 border-red-600 text-white text-sm transition hover:bg-red-600"
               >
                 Add Task
               </button>

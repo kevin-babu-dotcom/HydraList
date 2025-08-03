@@ -216,12 +216,8 @@ function TaskListPage() {
                     ) : (
                         // Optional: Show a message when no tasks exist
                         <div className="w-full flex items-center justify-center">
-                            <p 
-                                className="text-white/70 text-lg"
-                                style={{ fontFamily: 'Gilroy, sans-serif' }}
-                            >
-                                No tasks yet. Click the + button to add your first task!
-                            </p>
+                            
+                            <span className="text-red-500 text-5xl font-black absolute top-1/2" style={{ fontFamily: 'Gilroy, sans-serif' }}>The HydraList</span>
                         </div>
                     )}
                 </div>
